@@ -1,23 +1,61 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, OnInit } from '@angular/core';
+import {FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
-import { Ejemplo1Component } from './ejemplo1.component';
+interface Usuario{
+  nombre: string;
+  edad: number;
+  email:string;
+}
 
-describe('Ejemplo1Component', () => {
-  let component: Ejemplo1Component;
-  let fixture: ComponentFixture<Ejemplo1Component>;
+@Component({
+  selector: 'app-ejemplo1',
+  standalone: true,
+  imports: [ReactiveFormsModule],
+  templateUrl: './ejemplo1.component.html',
+  styles: ``
+})
+export class Ejemplo1Component implements OnInit {
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [Ejemplo1Component]
+  formGroup!: FormGroup;
+
+  nombre: string="Alondra"
+
+  persona:Usuario={
+    nombre:'',
+    edad:0,
+    email: ''
+  }
+
+  constructor(private readonly fb: FormBuilder){}
+
+  ngOnInit(): void {
+    this.formGroup= this.initForm();
+  }
+
+  initForm():FormGroup{
+    return this.fb.group({
+      nombre:[''],
+      edad:[''],
+      email:[''],
     })
-    .compileComponents();
+  }
+  onSubmit():void{
+    const {nombre, edad, email}= this.formGroup.value; //Desestructuración de arreglos
+    this.persona.nombre=nombre
+    this.persona.edad=edad //Esta sobreescribiendo el objeto colocandole el valor que se va a escribir en cada uno de los campos en el form
+    this.persona.email=email
 
-    fixture = TestBed.createComponent(Ejemplo1Component);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    let personaJSON= JSON.stringify(this.persona);
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    //localStorage.setItem("nombre",this.nombre); //Se almacena el nombre en un local storage, es el almacenamiento local en el navegador
+    localStorage.setItem("persona",personaJSON);  
+  }
+
+  subImprime():void{
+    const usuarioGuardado = localStorage.getItem('persona');
+    if(usuarioGuardado){
+      const usuarioRecuperado: Usuario = JSON.parse(usuarioGuardado);
+      this.persona=usuarioRecuperado;
+    }
+  }
+}
