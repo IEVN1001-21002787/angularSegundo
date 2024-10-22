@@ -1,0 +1,15 @@
+<p>list-message works!</p>
+
+
+<form [formGroup]="addAlumno" (ngSubmit)="enviarFormulario()">
+    <label for="dato">Ingresa tu dato:</label>
+    <input type="text" id="dato" formControlName="dato" required>
+
+    <!-- Muestra un mensaje de error si el campo está vacío -->
+    <div *ngIf="miFormulario.get('dato')?.invalid && miFormulario.get('dato')?.touched">
+      El dato es obligatorio.
+    </div>
+    
+    <button type="submit" [disabled]="miFormulario.invalid">Enviar</button>
+  </form>
+  
