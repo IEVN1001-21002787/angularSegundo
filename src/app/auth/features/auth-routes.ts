@@ -1,5 +1,6 @@
-import {Routes} from "@angular/router";
+import { Route, Routes
 
+} from "@angular/router";
 export default[
     {
         path: 'sign-in',
@@ -9,8 +10,5 @@ export default[
         path: 'sign-up',
         loadComponent:()=>import('./sign-up/sign-up.component'),   
     },
-    {
-        path: 'ejemplo1',
-        loadComponent:()=>import('./formulario/ejemplo1'),   
-    }
 ]as Routes
+
