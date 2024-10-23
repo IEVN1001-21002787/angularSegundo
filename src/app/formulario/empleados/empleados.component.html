@@ -1,125 +1,254 @@
-<div style="
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  background-color: #f2f2f2;
-">
-  <h2 style="color: #333;">Employee Registration</h2>
-  <form [formGroup]= "employeeForm" (ngSubmit)="addEmployee()" style="
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;"
-    >
-    <label for="matricula" style="font-weight: bold;">Matricula:</label>
-    <input type="number" id="matricula" formControlName="matricula" name="matricula" required style="
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    ">
+<!-- empleados.component.html -->
+<div class="container">
+  <h2 class="title">Registro de Empleados</h2>
+  
+  <form (submit)="addEmployee(); $event.preventDefault()" class="employee-form">
+      <div class="form-group">
+          <label for="matricula">Matrícula:</label>
+          <input type="number" 
+                 id="matricula" 
+                 name="matricula" 
+                 [(ngModel)]="newEmployee.matricula" 
+                 class="form-control" 
+                 min="1">
+      </div>
 
-    <label for="nombre" style="font-weight: bold;">Name:</label>
-    <input type="text" id="nombre" formControlName="nombre" name="nombre" required style="
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    ">
+      <div class="form-group">
+          <label for="nombre">Nombre:</label>
+          <input type="text" 
+                 id="nombre" 
+                 name="nombre" 
+                 [(ngModel)]="newEmployee.nombre" 
+                 class="form-control">
+      </div>
 
-    <label for="correo" style="font-weight: bold;">Correo:</label>
-    <input type="email" id="correo" formControlName="correo" name="correo" required style="
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    ">
+      <div class="form-group">
+          <label for="correo">Correo:</label>
+          <input type="email" 
+                 id="correo" 
+                 name="correo" 
+                 [(ngModel)]="newEmployee.correo" 
+                 class="form-control">
+      </div>
 
-    <label for="edad" style="font-weight: bold;">Edad:</label>
-    <input type="number" id="edad" formControlName="edad" name="edad" required style="
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    ">
+      <div class="form-group">
+          <label for="edad">Edad:</label>
+          <input type="number" 
+                 id="edad" 
+                 name="edad" 
+                 [(ngModel)]="newEmployee.edad" 
+                 class="form-control" 
+                 min="18" 
+                 max="100">
+      </div>
 
-    <label for="horasTraba" style="font-weight: bold;">Horas trabajadas:</label>
-    <input type="number" id="horasTraba" formControlName="horasTraba" name="horasTraba" required style="
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    ">
+      <div class="form-group">
+          <label for="horasTraba">Horas trabajadas:</label>
+          <input type="number" 
+                 id="horasTraba" 
+                 name="horasTraba" 
+                 [(ngModel)]="newEmployee.horasTraba" 
+                 class="form-control" 
+                 min="0" 
+                 max="168">
+      </div>
 
-    <button type="submit" style="
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px 20px;
+      <button type="submit" class="btn btn-primary">
+          {{ newEmployee.matricula ? 'Actualizar' : 'Agregar' }} Empleado
+      </button>
+  </form>
+
+  <div class="table-responsive">
+      <table class="employee-table" *ngIf="Empleados.length > 0">
+          <thead>
+              <tr>
+                  <th>Matrícula</th>
+                  <th>Nombre</th>
+                  <th>Correo</th>
+                  <th>Edad</th>
+                  <th>Horas</th>
+                  <th>Extra</th>
+                  <th>Total</th>
+                  <th>Acciones</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr *ngFor="let employee of Empleados">
+                  <td>{{employee.matricula}}</td>
+                  <td>{{employee.nombre}}</td>
+                  <td>{{employee.correo}}</td>
+                  <td>{{employee.edad}}</td>
+                  <td>{{employee.horasTraba}}</td>
+                  <td>{{employee.horasExtra}}</td>
+                  <td>${{employee.totalPago}}</td>
+                  <td class="action-buttons">
+                      <button (click)="updateEmployee(employee)" class="btn btn-success">
+                          Modificar
+                      </button>
+                      <button (click)="deleteEmployee(employee.matricula)" class="btn btn-danger">
+                          Eliminar
+                      </button>
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+  </div>
+
+  <div *ngIf="Empleados.length === 0" class="empty-state">
+      No hay empleados registrados
+  </div>
+
+  <button *ngIf="Empleados.length > 0" 
+          (click)="printEmployees()" 
+          class="btn print-btn">
+      Imprimir Lista
+  </button>
+</div>
+
+<style>
+  .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 15px;
+  }
+
+  .title {
+      color: #333;
+      text-align: center;
+      margin-bottom: 30px;
+  }
+
+  .employee-form {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+  }
+
+  .form-group {
+      margin-bottom: 15px;
+  }
+
+  .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      color: #333;
+      font-weight: 500;
+  }
+
+  .form-control {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      transition: border-color 0.3s;
+  }
+
+  .form-control:focus {
+      border-color: #007bff;
+      outline: none;
+  }
+
+  .btn {
+      padding: 8px 16px;
       border: none;
       border-radius: 4px;
       cursor: pointer;
-    ">Agregar Empleado</button>
-  </form>
+      transition: background-color 0.3s;
+  }
 
+  .btn-primary {
+      background-color: #007bff;
+      color: white;
+  }
 
-  <table style="
-    width: 100%;
-    border-collapse: collapse;
-    background-color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  ">
-    <thead>
-      <tr style="
-        background-color: #4CAF50;
-        color: white;
-      ">
-        <th style="padding: 10px;">Matricula</th>
-        <th style="padding: 10px;">Name</th>
-        <th style="padding: 10px;">Email</th>
-        <th style="padding: 10px;">Age</th>
-        <th style="padding: 10px;">Hours Worked</th>
-        <th style="padding: 10px;">Overtime</th>
-        <th style="padding: 10px;">Total Pay</th>
-        <th style="padding: 10px;">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let employee of Empleados" style="
-        border-bottom: 1px solid #f2f2f2;
-      ">
-        <td style="padding: 10px;">{{ employee.matricula }}</td>
-        <td style="padding: 10px;">{{ employee.nombre }}</td>
-        <td style="padding: 10px;">{{ employee.correo }}</td>
-        <td style="padding: 10px;">{{ employee.edad }}</td>
-        <td style="padding: 10px;">{{ employee.horasTraba }}</td>
-        <td style="padding: 10px;">{{ employee.horasExtra }}</td>
-        <td style="padding: 10px;">{{ employee.totalPago }}</td>
-        <td style="padding: 10px;">
-          <button (click)="updateEmployee(employee)" style="
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 5px;
-          ">Modify</button>
-          <button (click)="deleteEmployee(employee.matricula)" style="
-            background-color: #f44336;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-          ">Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  .btn-success {
+      background-color: #28a745;
+      color: white;
+  }
 
-  <button (click)="printEmployees()" style="
-    background-color: #008CBA;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 20px;
-  ">Print</button>
-</div>
+  .btn-danger {
+      background-color: #dc3545;
+      color: white;
+  }
 
-<app-empleados>
+  .btn:hover {
+      opacity: 0.9;
+  }
+
+  .table-responsive {
+      overflow-x: auto;
+  }
+
+  .employee-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .employee-table th,
+  .employee-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+  }
+
+  .employee-table th {
+      background-color: #f8f9fa;
+      font-weight: 600;
+  }
+
+  .employee-table tr:hover {
+      background-color: #f8f9fa;
+  }
+
+  .action-buttons {
+      display: flex;
+      gap: 8px;
+  }
+
+  .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+      background: #f8f9fa;
+      border-radius: 8px;
+      margin: 20px 0;
+  }
+
+  .print-btn {
+      background-color: #6c757d;
+      color: white;
+      margin: 20px auto;
+      display: block;
+  }
+
+  @media print {
+      .btn, 
+      .employee-form {
+          display: none;
+      }
+      
+      .employee-table {
+          box-shadow: none;
+      }
+  }
+
+  @media (max-width: 768px) {
+      .action-buttons {
+          flex-direction: column;
+      }
+      
+      .btn {
+          width: 100%;
+          margin-bottom: 5px;
+      }
+      
+      .employee-table {
+          font-size: 14px;
+      }
+  }
+</style>
