@@ -1,254 +1,85 @@
-<!-- empleados.component.html -->
-<div class="container">
-  <h2 class="title">Registro de Empleados</h2>
-  
-  <form (submit)="addEmployee(); $event.preventDefault()" class="employee-form">
-      <div class="form-group">
-          <label for="matricula">Matrícula:</label>
-          <input type="number" 
-                 id="matricula" 
-                 name="matricula" 
-                 [(ngModel)]="newEmployee.matricula" 
-                 class="form-control" 
-                 min="1">
-      </div>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold text-center mb-4">Registro de Empleados</h1>
 
-      <div class="form-group">
-          <label for="nombre">Nombre:</label>
-          <input type="text" 
-                 id="nombre" 
-                 name="nombre" 
-                 [(ngModel)]="newEmployee.nombre" 
-                 class="form-control">
-      </div>
+    
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="flex flex-col space-y-4 justify-center">
+                <div>
+                    <label for="matricula_modificar" class="block font-medium mb-2">Matrícula a Modificar</label>
+                    <input type="text" id="matricula_modificar" class="w-full p-2 border border-gray-300 rounded mb-4" />
+                </div>
+                <button (click)="modificarEmpleado()" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-yellow-600">Modificar</button>
+                <button (click)="eliminarEmpleado()" class="w-full bg-red-600   text-white p-2 rounded hover:bg-red-600">Eliminar</button>
+            </div>
 
-      <div class="form-group">
-          <label for="correo">Correo:</label>
-          <input type="email" 
-                 id="correo" 
-                 name="correo" 
-                 [(ngModel)]="newEmployee.correo" 
-                 class="form-control">
-      </div>
+            <div>
+                <h2 class="text-xl font-semibold mb-4">Registrar</h2>
+                <form class="space-y-4" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+                    <div>
+                        <label for="matricula" class="block font-medium">Matrícula</label>
+                        <input type="text" id="matricula" formControlName="matricula" class="w-full p-2 border border-gray-300 rounded" />
+                    </div>
+                    <div>
+                        <label for="nombre" class="block font-medium">Nombre</label>
+                        <input type="text" id="nombre" formControlName="nombre" class="w-full p-2 border border-gray-300 rounded" />
+                    </div>
+                    <div>
+                        <label for="correo" class="block font-medium">Correo</label>
+                        <input type="email" id="correo" formControlName="correo" class="w-full p-2 border border-gray-300 rounded" />
+                    </div>
+                    <div>
+                        <label for="edad" class="block font-medium">Edad</label>
+                        <input type="number" id="edad" formControlName="edad" class="w-full p-2 border border-gray-300 rounded" />
+                    </div>
+                    <div>
+                        <label for="horasTrabajadas" class="block font-medium">Horas trabajadas</label>
+                        <input type="number" id="horasTrabajadas" formControlName="horasTrabajadas" class="w-full p-2 border border-gray-300 rounded" />
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700" [disabled]="!formGroup.valid">Registrar</button>
+                </form>
+            </div>
+        </div>
 
-      <div class="form-group">
-          <label for="edad">Edad:</label>
-          <input type="number" 
-                 id="edad" 
-                 name="edad" 
-                 [(ngModel)]="newEmployee.edad" 
-                 class="form-control" 
-                 min="18" 
-                 max="100">
-      </div>
+        <!-- Tabla -->
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-300 text-sm">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-2 border">Matrícula</th>
+                        <th class="px-4 py-2 border">Nombre</th>
+                        <th class="px-4 py-2 border">Correo</th>
+                        <th class="px-4 py-2 border">Edad</th>
+                        <th class="px-4 py-2 border">Horas Trabajadas</th>
+                        <th class="px-4 py-2 border">Horas x Pagar</th>
+                        <th class="px-4 py-2 border">Horas Extras</th>
+                        <th class="px-4 py-2 border">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let empleado of empleados">
+                        <td class="px-4 py-2 border">{{ empleado.matricula }}</td>
+                        <td class="px-4 py-2 border">{{ empleado.nombre }}</td>
+                        <td class="px-4 py-2 border">{{ empleado.correo }}</td>
+                        <td class="px-4 py-2 border">{{ empleado.edad }}</td>
+                        <td class="px-4 py-2 border">{{ empleado.horasTrabajadas }}</td>
+                        <td class="px-4 py-2 border">{{ empleado.horasPorPagar }}</td>
+                        <td class="px-4 py-2 border">{{ empleado.horasExtras }}</td>
+                        <td class="px-4 py-2 border">{{ empleado.subtotal | currency:'MXN':'symbol-narrow':'1.2-2' }}</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="7" class="text-right px-4 py-2 border font-semibold">Total a Pagar:</td>
+                        <td class="px-4 py-2 border text-center font-semibold">{{ totalAPagar | currency:'MXN':'symbol-narrow':'1.2-2' }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
 
-      <div class="form-group">
-          <label for="horasTraba">Horas trabajadas:</label>
-          <input type="number" 
-                 id="horasTraba" 
-                 name="horasTraba" 
-                 [(ngModel)]="newEmployee.horasTraba" 
-                 class="form-control" 
-                 min="0" 
-                 max="168">
-      </div>
-
-      <button type="submit" class="btn btn-primary">
-          {{ newEmployee.matricula ? 'Actualizar' : 'Agregar' }} Empleado
-      </button>
-  </form>
-
-  <div class="table-responsive">
-      <table class="employee-table" *ngIf="Empleados.length > 0">
-          <thead>
-              <tr>
-                  <th>Matrícula</th>
-                  <th>Nombre</th>
-                  <th>Correo</th>
-                  <th>Edad</th>
-                  <th>Horas</th>
-                  <th>Extra</th>
-                  <th>Total</th>
-                  <th>Acciones</th>
-              </tr>
-          </thead>
-          <tbody>
-              <tr *ngFor="let employee of Empleados">
-                  <td>{{employee.matricula}}</td>
-                  <td>{{employee.nombre}}</td>
-                  <td>{{employee.correo}}</td>
-                  <td>{{employee.edad}}</td>
-                  <td>{{employee.horasTraba}}</td>
-                  <td>{{employee.horasExtra}}</td>
-                  <td>${{employee.totalPago}}</td>
-                  <td class="action-buttons">
-                      <button (click)="updateEmployee(employee)" class="btn btn-success">
-                          Modificar
-                      </button>
-                      <button (click)="deleteEmployee(employee.matricula)" class="btn btn-danger">
-                          Eliminar
-                      </button>
-                  </td>
-              </tr>
-          </tbody>
-      </table>
-  </div>
-
-  <div *ngIf="Empleados.length === 0" class="empty-state">
-      No hay empleados registrados
-  </div>
-
-  <button *ngIf="Empleados.length > 0" 
-          (click)="printEmployees()" 
-          class="btn print-btn">
-      Imprimir Lista
-  </button>
-</div>
-
-<style>
-  .container {
-      max-width: 1200px;
-      margin: 20px auto;
-      padding: 0 15px;
-  }
-
-  .title {
-      color: #333;
-      text-align: center;
-      margin-bottom: 30px;
-  }
-
-  .employee-form {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
-  }
-
-  .form-group {
-      margin-bottom: 15px;
-  }
-
-  .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      color: #333;
-      font-weight: 500;
-  }
-
-  .form-control {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      transition: border-color 0.3s;
-  }
-
-  .form-control:focus {
-      border-color: #007bff;
-      outline: none;
-  }
-
-  .btn {
-      padding: 8px 16px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-  }
-
-  .btn-primary {
-      background-color: #007bff;
-      color: white;
-  }
-
-  .btn-success {
-      background-color: #28a745;
-      color: white;
-  }
-
-  .btn-danger {
-      background-color: #dc3545;
-      color: white;
-  }
-
-  .btn:hover {
-      opacity: 0.9;
-  }
-
-  .table-responsive {
-      overflow-x: auto;
-  }
-
-  .employee-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 20px 0;
-      background: white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-
-  .employee-table th,
-  .employee-table td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-  }
-
-  .employee-table th {
-      background-color: #f8f9fa;
-      font-weight: 600;
-  }
-
-  .employee-table tr:hover {
-      background-color: #f8f9fa;
-  }
-
-  .action-buttons {
-      display: flex;
-      gap: 8px;
-  }
-
-  .empty-state {
-      text-align: center;
-      padding: 40px;
-      color: #666;
-      background: #f8f9fa;
-      border-radius: 8px;
-      margin: 20px 0;
-  }
-
-  .print-btn {
-      background-color: #6c757d;
-      color: white;
-      margin: 20px auto;
-      display: block;
-  }
-
-  @media print {
-      .btn, 
-      .employee-form {
-          display: none;
-      }
-      
-      .employee-table {
-          box-shadow: none;
-      }
-  }
-
-  @media (max-width: 768px) {
-      .action-buttons {
-          flex-direction: column;
-      }
-      
-      .btn {
-          width: 100%;
-          margin-bottom: 5px;
-      }
-      
-      .employee-table {
-          font-size: 14px;
-      }
-  }
-</style>
+        <div class="text-center mt-6">
+            <button (click)="generarTabla()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mr-2">Generar tabla</button>
+            <!-- <button (click)="imprimirTabla()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Imprimir tabla</button> -->
+        </div>
+    </div>
+</body>
