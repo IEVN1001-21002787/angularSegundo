@@ -13,5 +13,10 @@ export const routes: Routes = [
         path: 'res',
         loadChildren: () => import('./formulario/resistencia/res.routes')
     },
+    ,
+    {
+        path: 'utl',
+        loadChildren: () => import('../app/utl/')
+    }
     
 ];
