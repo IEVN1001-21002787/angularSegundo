@@ -11,6 +11,5 @@ export class MessageserviceService {
   add(alumno:string){
     this.alumnos.push(alumno);
   }
-
-  
+   
 }

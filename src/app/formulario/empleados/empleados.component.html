@@ -1,85 +1,73 @@
-<body class="bg-gray-100 p-6">
-    <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
-        <h1 class="text-2xl font-bold text-center mb-4">Registro de Empleados</h1>
+<div class="flex flex-col md:flex-row gap-6 p-6 bg-gray-50 min-h-screen">
+  
+  <div class="max-w-md p-6 bg-white border border-gray-300 rounded-lg shadow-md">
+    <h1 class="text-xl font-semibold mb-4 text-gray-800">Registro de Empleados</h1>
+    <form (submit)="agregarEmpleado($event)" class="space-y-4">
+      <div>
+        <label for="matricula" class="block text-sm font-medium text-gray-700">Matrícula:</label>
+        <input id="matricula" type="text" placeholder="Matrícula" [(ngModel)]="empleado.matricula" name="matricula" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+      </div>
+      <div>
+        <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre:</label>
+        <input id="nombre" type="text" placeholder="Nombre" [(ngModel)]="empleado.nombre" name="nombre" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+      </div>
+      <div>
+        <label for="correo" class="block text-sm font-medium text-gray-700">Correo:</label>
+        <input id="correo" type="email" placeholder="Correo" [(ngModel)]="empleado.correo" name="correo" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+      </div>
+      <div>
+        <label for="edad" class="block text-sm font-medium text-gray-700">Edad:</label>
+        <input id="edad" type="number" placeholder="Edad" [(ngModel)]="empleado.edad" name="edad" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+      </div>
+      <div>
+        <label for="horas" class="block text-sm font-medium text-gray-700">Horas trabajadas:</label>
+        <input id="horas" type="number" placeholder="Horas trabajadas" [(ngModel)]="empleado.horasTrabajadas" name="horasTrabajadas" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+      </div>
+      <button type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md py-2.5">Agregar Empleado</button>
+    </form>
+  </div>
 
-    
-        <div class="grid grid-cols-2 gap-4 mb-6">
-            <div class="flex flex-col space-y-4 justify-center">
-                <div>
-                    <label for="matricula_modificar" class="block font-medium mb-2">Matrícula a Modificar</label>
-                    <input type="text" id="matricula_modificar" class="w-full p-2 border border-gray-300 rounded mb-4" />
-                </div>
-                <button (click)="modificarEmpleado()" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-yellow-600">Modificar</button>
-                <button (click)="eliminarEmpleado()" class="w-full bg-red-600   text-white p-2 rounded hover:bg-red-600">Eliminar</button>
-            </div>
-
-            <div>
-                <h2 class="text-xl font-semibold mb-4">Registrar</h2>
-                <form class="space-y-4" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-                    <div>
-                        <label for="matricula" class="block font-medium">Matrícula</label>
-                        <input type="text" id="matricula" formControlName="matricula" class="w-full p-2 border border-gray-300 rounded" />
-                    </div>
-                    <div>
-                        <label for="nombre" class="block font-medium">Nombre</label>
-                        <input type="text" id="nombre" formControlName="nombre" class="w-full p-2 border border-gray-300 rounded" />
-                    </div>
-                    <div>
-                        <label for="correo" class="block font-medium">Correo</label>
-                        <input type="email" id="correo" formControlName="correo" class="w-full p-2 border border-gray-300 rounded" />
-                    </div>
-                    <div>
-                        <label for="edad" class="block font-medium">Edad</label>
-                        <input type="number" id="edad" formControlName="edad" class="w-full p-2 border border-gray-300 rounded" />
-                    </div>
-                    <div>
-                        <label for="horasTrabajadas" class="block font-medium">Horas trabajadas</label>
-                        <input type="number" id="horasTrabajadas" formControlName="horasTrabajadas" class="w-full p-2 border border-gray-300 rounded" />
-                    </div>
-                    <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700" [disabled]="!formGroup.valid">Registrar</button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Tabla -->
-        <div class="overflow-x-auto">
-            <table class="min-w-full bg-white border border-gray-300 text-sm">
-                <thead>
-                    <tr>
-                        <th class="px-4 py-2 border">Matrícula</th>
-                        <th class="px-4 py-2 border">Nombre</th>
-                        <th class="px-4 py-2 border">Correo</th>
-                        <th class="px-4 py-2 border">Edad</th>
-                        <th class="px-4 py-2 border">Horas Trabajadas</th>
-                        <th class="px-4 py-2 border">Horas x Pagar</th>
-                        <th class="px-4 py-2 border">Horas Extras</th>
-                        <th class="px-4 py-2 border">Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let empleado of empleados">
-                        <td class="px-4 py-2 border">{{ empleado.matricula }}</td>
-                        <td class="px-4 py-2 border">{{ empleado.nombre }}</td>
-                        <td class="px-4 py-2 border">{{ empleado.correo }}</td>
-                        <td class="px-4 py-2 border">{{ empleado.edad }}</td>
-                        <td class="px-4 py-2 border">{{ empleado.horasTrabajadas }}</td>
-                        <td class="px-4 py-2 border">{{ empleado.horasPorPagar }}</td>
-                        <td class="px-4 py-2 border">{{ empleado.horasExtras }}</td>
-                        <td class="px-4 py-2 border">{{ empleado.subtotal | currency:'MXN':'symbol-narrow':'1.2-2' }}</td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="7" class="text-right px-4 py-2 border font-semibold">Total a Pagar:</td>
-                        <td class="px-4 py-2 border text-center font-semibold">{{ totalAPagar | currency:'MXN':'symbol-narrow':'1.2-2' }}</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-
-        <div class="text-center mt-6">
-            <button (click)="generarTabla()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mr-2">Generar tabla</button>
-            <!-- <button (click)="imprimirTabla()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Imprimir tabla</button> -->
-        </div>
+  <!-- Tabla de resultados -->
+  <div class="flex-1 bg-white border border-gray-300 rounded-lg shadow-md p-6 overflow-x-auto">
+    <button (click)="imprimirEmpleados()" class="w-full text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 rounded-md py-2.5 mb-4">Imprimir</button>
+    <div *ngIf="mostrarTabla">
+      <h3 class="text-lg font-semibold mb-4 text-gray-800">Registro de Empleados</h3>
+      <table class="w-full text-sm text-gray-700 border-collapse">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="border px-4 py-2">Matrícula</th>
+            <th class="border px-4 py-2">Nombre</th>
+            <th class="border px-4 py-2">Correo</th>
+            <th class="border px-4 py-2">Edad</th>
+            <th class="border px-4 py-2">Horas Trabajadas</th>
+            <th class="border px-4 py-2">Horas por pagar</th>
+            <th class="border px-4 py-2">Horas Extras</th>
+            <th class="border px-4 py-2">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let empleado of empleados" (click)="seleccionarEmpleado(empleado)" [class.bg-blue-200]="empleado === empleadoSeleccionado" class="even:bg-gray-50">
+            <td class="border px-4 py-2">{{ empleado.matricula }}</td>
+            <td class="border px-4 py-2">{{ empleado.nombre }}</td>
+            <td class="border px-4 py-2">{{ empleado.correo }}</td>
+            <td class="border px-4 py-2">{{ empleado.edad }}</td>
+            <td class="border px-4 py-2">{{ empleado.horasTrabajadas }}</td>
+            <td class="border px-4 py-2">{{ calcularHorasPorPagar(empleado.horasTrabajadas) }}</td>
+            <td class="border px-4 py-2">{{ calcularHorasExtras(empleado.horasTrabajadas) }}</td>
+            <td class="border px-4 py-2">{{ calcularMonto(empleado.horasTrabajadas) }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr class="font-bold bg-gray-100">
+            <td colspan="7" class="border px-4 py-2 text-right">Total a pagar:</td>
+            <td class="border px-4 py-2">{{ calcularTotalAPagar() }}</td>
+          </tr>
+        </tfoot>
+      </table>
     </div>
-</body>
+    <div class="mt-4">
+      <button (click)="modificarEmpleado()" class="w-full text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 rounded-md py-2.5 mr-2" [disabled]="!empleadoSeleccionado">Modificar</button>
+      <button (click)="eliminarEmpleado()" class="w-full text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 rounded-md py-2.5" [disabled]="!empleadoSeleccionado">Eliminar</button>
+    </div>
+  </div>
+</div>

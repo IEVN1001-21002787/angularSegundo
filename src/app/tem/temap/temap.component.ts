@@ -1,19 +1,12 @@
 import { Component } from '@angular/core';
-import { TemahComponent } from '../temah/temah.component';
 
 @Component({
   selector: 'app-temap',
   standalone: true,
-  imports: [TemahComponent],
+  imports: [],
   templateUrl: './temap.component.html',
   styles: ``
 })
 export class TemapComponent {
-  
-  title = 'Hola Desde papá';
-  mensaje2:string=""
-  recibirMensaje(mensaje:string){
-    this.mensaje2=mensaje;
-  }
 
 }
